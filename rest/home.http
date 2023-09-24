@@ -1,5 +1,5 @@
 ## Local host home route test
 GET http://0.0.0.0:42069
 
-## PR Deployment home route test
-GET https://bca-backend-go-bca-backend-go-pr-5.up.railway.app/
+## Development Deployment home route test
+GET https://go-bca-test-development.up.railway.app/

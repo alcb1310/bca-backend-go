@@ -1,1 +1,5 @@
+## Local deployment
 POST 0.0.0.0:42069/register
+
+## Development Deployment home route test
+POST https://go-bca-test-development.up.railway.app/register

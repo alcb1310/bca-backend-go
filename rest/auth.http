@@ -3,3 +3,11 @@ POST 0.0.0.0:42069/login
 
 ## Logout process
 GET 0.0.0.0:42069/api/v1/logout
+
+## Development Deployment home route test
+## Login process
+POST https://go-bca-test-development.up.railway.app/login
+
+## Logout process
+GET https://go-bca-test-development.up.railway.app/api/v1/logout
+
