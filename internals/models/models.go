@@ -116,3 +116,28 @@ type InvoiceDetails struct {
 	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid"`
 }
+
+type Historic struct {
+	Base
+	BudgetItem   BudgetItem `json:"budgetItem" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	BudgetItemId uuid.UUID  `json:"budgetItemId" gorm:"not null;type:uuid;index:uq_historic,unique"`
+	Project      Project    `json:"project" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	ProjectId    uuid.UUID  `json:"projectId" gorm:"not null;type:uuid;index:uq_historic,unique"`
+	HistoricDate time.Time  `json:"historicDate" gorm:"not null;type:Date;index;index:uq_historic,unique"`
+
+	InitialQuantity float64 `json:"initialQuantity" gorm:"type:decimal(20,8)"`
+	InitialCost     float64 `json:"initialCost" gorm:"type:decimal(20,8)"`
+	InitialTotal    float64 `json:"initialTotal" gorm:"not null;type:decimal(20,8)"`
+
+	SpentQuantity float64 `json:"spentQuantity" gorm:"type:decimal(20,8)"`
+	SpentTotal    float64 `json:"spentTotal" gorm:"not null;type:decimal(20,8)"`
+
+	ToSpendQuantity float64 `json:"toSpendQuantity" gorm:"type:decimal(20,8)"`
+	ToSpendCost     float64 `json:"toSpendCost" gorm:"type:decimal(20,8)"`
+	ToSpendTotal    float64 `json:"toSpendtTotal" gorm:"not null;type:decimal(20,8)"`
+
+	UpdatedBudget float64 `json:"updated_budget" gorm:"not null;type:decimal(20,8)"`
+
+	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_historic,unique"`
+}

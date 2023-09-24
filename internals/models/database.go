@@ -38,6 +38,7 @@ func Connect() *gorm.DB {
 	d.AutoMigrate(&Budget{})
 	d.AutoMigrate(&Invoice{})
 	d.AutoMigrate(&InvoiceDetails{})
+	d.AutoMigrate(&Historic{})
 
 	log.Println(":INFO: Database connected")
 	return d
