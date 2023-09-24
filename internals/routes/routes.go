@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
@@ -26,13 +25,10 @@ func NewRouter() *Router {
 }
 
 func (s *Router) routes() {
+	// public routes
 	s.HandleFunc("/", s.handleHomeRoute()).Methods(http.MethodGet)
-}
+	s.HandleFunc("/register", s.handleRegisterRoute()).Methods(http.MethodPost)
+	s.HandleFunc("/login", s.handleLogin()).Methods(http.MethodPost)
 
-func (s *Router) handleHomeRoute() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode("Hello World")
-	}
+	s.initAuthRoutes()
 }
