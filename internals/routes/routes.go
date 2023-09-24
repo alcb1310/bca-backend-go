@@ -4,17 +4,23 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/alcb1310/bca-backend-go/internals/models"
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 type Router struct {
 	*mux.Router
+
+	db *gorm.DB
 }
 
 func NewRouter() *Router {
 	r := &Router{
 		Router: mux.NewRouter(),
 	}
+
+	r.db = models.Connect()
 	r.routes()
 	return r
 }
