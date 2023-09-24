@@ -36,3 +36,15 @@ type Project struct {
 	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_projectname,unique"`
 }
+
+type Supplier struct {
+	Base
+	SupplierId   string `json:"supplier_id" gorm:"not null;index:uq_supplierid,unique"`
+	Name         string `json:"name" gorm:"not null;index:uq_suppliername,unique;index"`
+	ContactName  string `json:"contact_name"`
+	ContactEmail string `json:"contact_email"`
+	ContactPhone string `json:"contact_phone"`
+
+	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_supplierid,unique;index:uq_suppliername,unique"`
+}
