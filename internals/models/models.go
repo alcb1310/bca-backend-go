@@ -141,3 +141,8 @@ type Historic struct {
 	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_historic,unique"`
 }
+
+type LoggedInUser struct {
+	Email string `json:"email" gorm:"primary_key"`
+	JWT   []byte `json:"jwt" gorm:"not null"`
+}
