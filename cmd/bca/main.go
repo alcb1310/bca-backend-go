@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/alcb1310/bca-backend-go/internals/routes"
 	"github.com/joho/godotenv"
 )
 
@@ -18,11 +19,8 @@ func main() {
 		}
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Home endpoint hit")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello World"))
-	})
+	r := routes.NewRouter()
+
 	log.Println(":INFO: Server listening in port: ", port)
-	log.Panic(http.ListenAndServe(":"+port, nil))
+	log.Panic(http.ListenAndServe(":"+port, r))
 }
