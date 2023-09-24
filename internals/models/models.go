@@ -48,3 +48,17 @@ type Supplier struct {
 	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_supplierid,unique;index:uq_suppliername,unique"`
 }
+
+type BudgetItem struct {
+	Base
+	Code        string `json:"code" gorm:"not null;index;index:uq_budgetitemcode,unique"`
+	Name        string `json:"name" gorm:"not null;index;index:uq_budgetitemname,unique"`
+	Accumulates bool   `json:"accumulates" gorm:"not null;default:false"`
+	Level       uint   `json:"level" gorm:"not null;type:uint;default:1"`
+
+	BudgetItem   *BudgetItem `json:"budgetItem" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	BudgetItemId uuid.UUID   `json:"budgetItemId" gorm:"type:uuid"`
+
+	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid;index:uq_budgetitemcode,unique;index:uq_budgetitemname,unique"`
+}
