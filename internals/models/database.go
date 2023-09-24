@@ -30,6 +30,8 @@ func Connect() *gorm.DB {
 		log.Panic("Unable to connect to the database")
 	}
 
+	d.AutoMigrate(&Company{})
+
 	log.Println(":INFO: Database connected")
 	return d
 
