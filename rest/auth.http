@@ -1,13 +1,31 @@
+### Local routes
+
 ## Login process
 POST 0.0.0.0:42069/login
 
 ## Logout process
 GET 0.0.0.0:42069/api/v1/logout
 
-## Development Deployment home route test
+### Deployed routes
+
 ## Login process
-POST https://go-bca-test-development.up.railway.app/login
+
+## PR Branch Deployment register route
+POST https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/login
+
+## Development Deployment register route
+POST https://bca-backend-go-development.up.railway.app/login
+
+## Production Deployment register route
+POST https://bca-backend-go.up.railway.app/login
 
 ## Logout process
-GET https://go-bca-test-development.up.railway.app/api/v1/logout
 
+## PR Branch Deployment register route
+GET https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/api/v1/logout
+
+## Development Deployment register route
+GET https://bca-backend-go-development.up.railway.app/api/v1/logout
+
+## Production Deployment register route
+GET https://bca-backend-go.up.railway.app/api/v1/logout
