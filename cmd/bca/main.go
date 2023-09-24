@@ -4,10 +4,20 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	port, portRead := os.LookupEnv("PORT")
+	if !portRead {
+		godotenv.Load()
+		port, portRead = os.LookupEnv("PORT")
+		if !portRead {
+			log.Panic("Unable to load environment variables")
+		}
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Home endpoint hit")
 		w.WriteHeader(http.StatusOK)
