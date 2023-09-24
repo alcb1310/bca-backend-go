@@ -31,6 +31,7 @@ func Connect() *gorm.DB {
 	}
 
 	d.AutoMigrate(&Company{})
+	d.AutoMigrate(&User{})
 
 	log.Println(":INFO: Database connected")
 	return d
