@@ -20,6 +20,11 @@ type registerCompany struct {
 	UserName  string `json:"userName"`
 }
 
+type loginCredentials struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (s *Router) handleHomeRoute() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -88,6 +93,24 @@ func (s *Router) handleRegisterRoute() http.HandlerFunc {
 
 func (s *Router) handleLogin() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("TODO: handle Login"))
+		var c loginCredentials
+		var u models.User
+
+		if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		result := s.db.Find(&u, "email = ?", c.Email)
+		if result.Error != nil || result.RowsAffected != 1 {
+			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
+		}
+		if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(c.Password)); err != nil {
+			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode("Logged in")
 	}
 }

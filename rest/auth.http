@@ -3,6 +3,11 @@
 ## Login process
 POST 0.0.0.0:42069/login
 
+{
+     "email": "test@test.com",
+     "password": "password123"
+}
+
 ## Logout process
 GET 0.0.0.0:42069/api/v1/logout
 
