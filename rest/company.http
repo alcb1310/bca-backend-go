@@ -1,1 +1,29 @@
+## Local deployment
 POST 0.0.0.0:42069/register
+
+{
+     "id": "1234567890",
+     "name": "Test Company",
+     "employees": 2,
+     "email": "test@test.com",
+     "password": "password123",
+     "userName": "Test user"
+}
+
+## PR Branch Deployment register route
+POST https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/register
+
+{
+     "id": "1234567890",
+     "name": "Test Company",
+     "employees": 2,
+     "email": "test@test.com",
+     "password": "password123",
+     "userName": "Test user"
+}
+
+## Development Deployment register route
+POST https://bca-backend-go-development.up.railway.app/register
+
+## Production Deployment register route
+POST https://bca-backend-go.up.railway.app/register

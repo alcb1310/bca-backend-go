@@ -1,5 +1,43 @@
+### Local routes
+
 ## Login process
 POST 0.0.0.0:42069/login
 
+{
+     "email": "test@test.com",
+     "password": "password123"
+}
+
 ## Logout process
 GET 0.0.0.0:42069/api/v1/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZkNDQ0ZWZlLTU4NTgtNDFiYy1iZjU4LWJhZmRiN2ZhZTk3YSIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImNvbXBhbnlfaWQiOiJjOWE0ZWFkYi1mZGQyLTRjODQtYmNiMC05YTc1YmZjMTNmNTUiLCJpc19sb2dnZWRfaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjMtMDktMjVUMTU6NDg6MjEuNzk1NDQ3Mjc4LTA1OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjMtMDktMjVUMTY6NDg6MjEuNzk1NDQ3MzU2LTA1OjAwIn0.PZ8sKS6W_tHh8DpEyMdxRinEvxKPQxqPpVZFCHISZr0
+
+### Deployed routes
+
+## Login process
+
+## PR Branch Deployment login route
+POST https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/login
+
+{
+     "email": "test@test.com",
+     "password": "password123"
+}
+
+## Development Deployment login route
+POST https://bca-backend-go-development.up.railway.app/login
+
+## Production Deployment login route
+POST https://bca-backend-go.up.railway.app/login
+
+## Logout process
+
+## PR Branch Deployment logout route
+GET https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/api/v1/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ1YzI1YjFhLTdjODYtNGU5Ni1hYjgyLTM1ODMxZTg5YzYzOCIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImNvbXBhbnlfaWQiOiI5MzhjYThkMS1iNDZiLTQwNTEtYWI5Ni01YjMzYzBmMDU4M2MiLCJpc19sb2dnZWRfaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjMtMDktMjVUMjE6MDI6MjUuNTMwNjYzNDQ5WiIsImV4cGlyZWRfYXQiOiIyMDIzLTA5LTI1VDIyOjAyOjI1LjUzMDY2Mzg0OFoifQ.yWir8Hbi0ZnAVyTlRoDtv77zHiVwJVvtFBUiDdiyemo
+
+## Development Deployment logout route
+GET https://bca-backend-go-development.up.railway.app/api/v1/logout
+
+## Production Deployment logout route
+GET https://bca-backend-go.up.railway.app/api/v1/logout

@@ -22,7 +22,13 @@ In order to configure this project, the following environment variables are requ
 - PGPASSWORD
 - PGPORT
 - PGUSER
+- SECRET
 
 ## API Routes
 
 - **/** this is the home route, for the time being is a route that will check if the server is working
+
+### Authentication Endpoints
+
+- **/login** Using a POST request to this is the endpoint where the user will provide their credentials and log in
+- **/api/v1/logout** Using a GET request to this endpoint, the user will be logged out from the application
