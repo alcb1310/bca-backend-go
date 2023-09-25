@@ -8,7 +8,10 @@ require (
 	gorm.io/driver/postgres v1.5.2
 )
 
-require github.com/lib/pq v1.1.1 // indirect
+require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/lib/pq v1.1.1 // indirect
+)
 
 require (
 	github.com/google/uuid v1.3.1
