@@ -34,6 +34,7 @@ POST https://bca-backend-go.up.railway.app/login
 
 ## PR Branch Deployment logout route
 GET https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/api/v1/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ1YzI1YjFhLTdjODYtNGU5Ni1hYjgyLTM1ODMxZTg5YzYzOCIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImNvbXBhbnlfaWQiOiI5MzhjYThkMS1iNDZiLTQwNTEtYWI5Ni01YjMzYzBmMDU4M2MiLCJpc19sb2dnZWRfaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjMtMDktMjVUMjE6MDI6MjUuNTMwNjYzNDQ5WiIsImV4cGlyZWRfYXQiOiIyMDIzLTA5LTI1VDIyOjAyOjI1LjUzMDY2Mzg0OFoifQ.yWir8Hbi0ZnAVyTlRoDtv77zHiVwJVvtFBUiDdiyemo
 
 ## Development Deployment logout route
 GET https://bca-backend-go-development.up.railway.app/api/v1/logout

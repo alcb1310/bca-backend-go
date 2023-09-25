@@ -22,6 +22,7 @@ In order to configure this project, the following environment variables are requ
 - PGPASSWORD
 - PGPORT
 - PGUSER
+- SECRET
 
 ## API Routes
 
