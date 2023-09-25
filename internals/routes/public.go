@@ -3,7 +3,6 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/mail"
 	"os"
@@ -116,17 +115,12 @@ func (s *Router) handleLogin() http.HandlerFunc {
 		}
 
 		secretKey := os.Getenv("SECRET")
-		log.Println("Environment: ", secretKey)
 		jwtMaker, err := utils.NewJWTMaker(secretKey)
-		log.Println("jwtMaker: ", jwtMaker)
-		log.Println(err)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 		token, err := jwtMaker.CreateToken(u, 60*time.Minute)
-		log.Println(token)
-		log.Println(err)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
@@ -137,10 +131,7 @@ func (s *Router) handleLogin() http.HandlerFunc {
 			Email: u.Email,
 			JWT:   byteToken,
 		}
-		result = s.db.Create(&loggedInUser)
-		if err != nil {
-			s.db.Save(&loggedInUser)
-		}
+		s.db.Save(&loggedInUser)
 
 		w.WriteHeader(http.StatusOK)
 		type response struct {
