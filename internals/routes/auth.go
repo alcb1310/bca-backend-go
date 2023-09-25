@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/alcb1310/bca-backend-go/internals/models"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
@@ -12,14 +14,6 @@ type protectedRoutes struct {
 	*mux.Router
 
 	db *gorm.DB
-}
-
-func jsonMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println(":INFO: Should only display on logout")
-		w.Header().Set("Content-Type", "application/json")
-		next.ServeHTTP(w, r)
-	})
 }
 
 func (s *Router) initAuthRoutes() {
@@ -34,7 +28,22 @@ func (s *Router) initAuthRoutes() {
 }
 
 func (p *protectedRoutes) handleLogout() http.HandlerFunc {
+	type response struct {
+		Response string `json:"response"`
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("TODO: handle Logout"))
+		token, err := GetMyPaload(r)
+		if err != nil {
+			log.Println(":Error: ", err)
+			return
+		}
+
+		p.db.Delete(&models.LoggedInUser{}, "email = ?", token.Email)
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(response{
+			Response: "User logged out",
+		})
 	}
 }
