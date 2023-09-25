@@ -28,6 +28,7 @@ func (s *Router) initAuthRoutes() {
 		Router: s.PathPrefix("/api/v1").Subrouter(),
 	}
 	p.Use(jsonMiddleware)
+	p.Use(s.authVerify)
 
 	p.HandleFunc("/logout", p.handleLogout()).Methods(http.MethodGet)
 }
