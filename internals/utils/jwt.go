@@ -3,7 +3,6 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
@@ -11,10 +10,8 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	ErrExpiredToken = errors.New("Token has expired")
-	ErrInvalidToken = errors.New("Invalid token")
-)
+var ErrExpiredToken = errors.New("token has expired")
+var ErrInvalidToken = errors.New("invalid token")
 
 const minSecretKeySize = 8
 
@@ -24,7 +21,7 @@ type Payload struct {
 	CompanyId  uuid.UUID `json:"company_id"`
 	IsLoggedIn bool      `json:"is_logged_in"`
 	IssuedAt   time.Time `json:"issued_at"`
-	ExpireAt   time.Time `json:"expire_at"`
+	ExpiredAt  time.Time `json:"expired_at"`
 }
 
 type JWTMaker struct {
@@ -36,6 +33,13 @@ type Maker interface {
 	VerifyToken(token string) (*Payload, error)
 }
 
+func NewJWTMaker(secretKey string) (Maker, error) {
+	if len(secretKey) < minSecretKeySize {
+		return nil, fmt.Errorf("invalid key size: must be at least %d characters", minSecretKeySize)
+	}
+	return &JWTMaker{secretKey}, nil
+}
+
 func NewPayload(u models.User, duration time.Duration) *Payload {
 	payload := &Payload{
 		ID:         u.ID,
@@ -43,32 +47,22 @@ func NewPayload(u models.User, duration time.Duration) *Payload {
 		CompanyId:  u.CompanyId,
 		IsLoggedIn: true,
 		IssuedAt:   time.Now(),
-		ExpireAt:   time.Now().Add(duration),
+		ExpiredAt:  time.Now().Add(duration),
 	}
 	return payload
 }
 
-func NewJWTMaker(secretKey string) (Maker, error) {
-	if len(secretKey) < minSecretKeySize {
-		return nil, errors.New(fmt.Sprintf("Invalid key size: must be at least %d characters", minSecretKeySize))
-	}
-	return &JWTMaker{secretKey}, nil
-}
-
 func (maker *JWTMaker) CreateToken(userInfo models.User, duration time.Duration) (string, error) {
 	payload := NewPayload(userInfo, duration)
-	log.Println(payload)
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodES256, payload)
-	log.Println(jwtToken)
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 
 func (payload *Payload) Valid() error {
-	if payload.IsLoggedIn && time.Now().After(payload.ExpireAt) {
+	if payload.IsLoggedIn && time.Now().After(payload.ExpiredAt) {
 		return ErrExpiredToken
 	}
-
 	return nil
 }
 
@@ -78,7 +72,6 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 		if !ok {
 			return nil, ErrInvalidToken
 		}
-
 		return []byte(maker.secretKey), nil
 	}
 

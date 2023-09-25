@@ -115,14 +115,18 @@ func (s *Router) handleLogin() http.HandlerFunc {
 			return
 		}
 
-		secertKey := os.Getenv("SECRET")
-		jwtMaker, err := utils.NewJWTMaker(secertKey)
+		secretKey := os.Getenv("SECRET")
+		log.Println("Environment: ", secretKey)
+		jwtMaker, err := utils.NewJWTMaker(secretKey)
+		log.Println("jwtMaker: ", jwtMaker)
+		log.Println(err)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 		token, err := jwtMaker.CreateToken(u, 60*time.Minute)
 		log.Println(token)
+		log.Println(err)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return

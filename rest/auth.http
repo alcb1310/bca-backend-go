@@ -15,22 +15,27 @@ GET 0.0.0.0:42069/api/v1/logout
 
 ## Login process
 
-## PR Branch Deployment register route
+## PR Branch Deployment login route
 POST https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/login
 
-## Development Deployment register route
+{
+     "email": "test@test.com",
+     "password": "password123"
+}
+
+## Development Deployment login route
 POST https://bca-backend-go-development.up.railway.app/login
 
-## Production Deployment register route
+## Production Deployment login route
 POST https://bca-backend-go.up.railway.app/login
 
 ## Logout process
 
-## PR Branch Deployment register route
+## PR Branch Deployment logout route
 GET https://bca-backend-go-bca-backend-go-pr-8.up.railway.app/api/v1/logout
 
-## Development Deployment register route
+## Development Deployment logout route
 GET https://bca-backend-go-development.up.railway.app/api/v1/logout
 
-## Production Deployment register route
+## Production Deployment logout route
 GET https://bca-backend-go.up.railway.app/api/v1/logout
