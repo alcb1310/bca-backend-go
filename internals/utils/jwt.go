@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
@@ -56,8 +57,10 @@ func NewJWTMaker(secretKey string) (Maker, error) {
 
 func (maker *JWTMaker) CreateToken(userInfo models.User, duration time.Duration) (string, error) {
 	payload := NewPayload(userInfo, duration)
+	log.Println(payload)
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodES256, payload)
+	log.Println(jwtToken)
 	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 

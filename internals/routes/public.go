@@ -2,10 +2,15 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"net/mail"
+	"os"
+	"time"
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
+	"github.com/alcb1310/bca-backend-go/internals/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -110,7 +115,35 @@ func (s *Router) handleLogin() http.HandlerFunc {
 			return
 		}
 
+		secertKey := os.Getenv("SECRET")
+		jwtMaker, err := utils.NewJWTMaker(secertKey)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		token, err := jwtMaker.CreateToken(u, 60*time.Minute)
+		log.Println(token)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		byteToken := []byte(token)
+		loggedInUser := models.LoggedInUser{
+			Email: u.Email,
+			JWT:   byteToken,
+		}
+		result = s.db.Create(&loggedInUser)
+		if err != nil {
+			s.db.Save(&loggedInUser)
+		}
+
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode("Logged in")
+		type response struct {
+			Response string `json:"response"`
+		}
+		json.NewEncoder(w).Encode(response{
+			Response: fmt.Sprintf("Bearer %s", token),
+		})
 	}
 }
