@@ -13,8 +13,9 @@ type Base struct {
 
 type Company struct {
 	Base
+	Ruc       string `json:"ruc" gorm:"not null;index;unique"`
 	Name      string `json:"name" gorm:"not null;index;unique"`
-	Employees uint   `json:"employees" gorm:"not null;default:1;type:smallint"`
+	Employees uint8  `json:"employees" gorm:"not null;default:1;type:smallint"`
 	IsActive  bool   `json:"is_active" gorm:"not null;default:true"`
 }
 
