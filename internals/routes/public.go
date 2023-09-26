@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/mail"
 	"os"
@@ -79,7 +80,10 @@ func (s *Router) handleRegisterRoute() http.HandlerFunc {
 
 		var role models.Role
 		result = tx.Find(&role, "name = 'admin'")
-		if result.Error != nil || result.RowsAffected != 0 {
+		log.Println(result.Error)
+		log.Println(result.RowsAffected)
+		log.Println(role)
+		if result.Error != nil || result.RowsAffected != 1 {
 			tx.Rollback()
 			http.Error(w, "No roles in the database", http.StatusInternalServerError)
 			return
