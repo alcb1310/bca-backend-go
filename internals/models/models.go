@@ -27,6 +27,8 @@ type User struct {
 
 	CompanyId uuid.UUID `json:"companyId" gorm:"not null;type:uuid"`
 	Company   Company   `json:"company" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	RoleId    uuid.UUID `json:"role_id" gorm:"not null;type:uuid"`
+	Role      Role      `json:"role" gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 }
 
 type Project struct {
@@ -146,4 +148,9 @@ type Historic struct {
 type LoggedInUser struct {
 	Email string `json:"email" gorm:"primary_key"`
 	JWT   []byte `json:"jwt" gorm:"not null"`
+}
+
+type Role struct {
+	Base
+	Name string `json:"name" gorm"not null;index:uq_roles,unique"`
 }

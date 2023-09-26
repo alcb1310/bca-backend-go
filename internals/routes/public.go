@@ -76,11 +76,21 @@ func (s *Router) handleRegisterRoute() http.HandlerFunc {
 			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		var role models.Role
+		result = tx.Find(&role, "name = 'admin'")
+		if result.Error != nil || result.RowsAffected != 0 {
+			tx.Rollback()
+			http.Error(w, "No roles in the database", http.StatusInternalServerError)
+			return
+		}
+
 		u := models.User{
 			Name:     reg.UserName,
 			Email:    reg.Email,
 			Password: string(pass),
 			Company:  c,
+			Role:     role,
 		}
 		result = tx.Create(&u)
 		if result.Error != nil {
