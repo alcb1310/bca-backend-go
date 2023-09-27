@@ -1,0 +1,9 @@
+POST http://0.0.0.0:42069/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI1NWE4YTA0LWZkYjEtNDRkOC1iNWMxLTY3M2JjMTcyNDI2ZSIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImNvbXBhbnlfaWQiOiI4ZDEwZTVlNC05MjU1LTRhNzgtYThmZS0wNzk1MGY3ZWRkODMiLCJyb2xlIjoiYWRtaW4iLCJpc19sb2dnZWRfaW4iOnRydWUsImlzc3VlZF9hdCI6IjIwMjMtMDktMjZUMTc6NDY6MTguMTIxNzY0NTU0LTA1OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjMtMDktMjZUMTg6NDY6MTguMTIxNzY0NjA1LTA1OjAwIn0.sxQlbNLXQwo5v0Trwbdkc50AA4ye1G54mDliUG17moQ
+
+{
+     "email": "andres@andrescourt.com",
+     "name": "Andres Court",
+     "password": "password123",
+     "role": "user"
+}
