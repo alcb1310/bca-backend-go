@@ -19,6 +19,7 @@ type Payload struct {
 	ID         uuid.UUID `json:"id"`
 	Email      string    `json:"email"`
 	CompanyId  uuid.UUID `json:"company_id"`
+	Role       string    `json:"role"`
 	IsLoggedIn bool      `json:"is_logged_in"`
 	IssuedAt   time.Time `json:"issued_at"`
 	ExpiredAt  time.Time `json:"expired_at"`
@@ -29,7 +30,7 @@ type JWTMaker struct {
 }
 
 type Maker interface {
-	CreateToken(userInfo models.User, duration time.Duration) (string, error)
+	CreateToken(userInfo models.User, role string, duration time.Duration) (string, error)
 	VerifyToken(token string) (*Payload, error)
 }
 
@@ -40,11 +41,12 @@ func NewJWTMaker(secretKey string) (Maker, error) {
 	return &JWTMaker{secretKey}, nil
 }
 
-func NewPayload(u models.User, duration time.Duration) *Payload {
+func NewPayload(u models.User, role string, duration time.Duration) *Payload {
 	payload := &Payload{
 		ID:         u.ID,
 		Email:      u.Email,
 		CompanyId:  u.CompanyId,
+		Role:       role,
 		IsLoggedIn: true,
 		IssuedAt:   time.Now(),
 		ExpiredAt:  time.Now().Add(duration),
@@ -52,8 +54,8 @@ func NewPayload(u models.User, duration time.Duration) *Payload {
 	return payload
 }
 
-func (maker *JWTMaker) CreateToken(userInfo models.User, duration time.Duration) (string, error) {
-	payload := NewPayload(userInfo, duration)
+func (maker *JWTMaker) CreateToken(userInfo models.User, role string, duration time.Duration) (string, error) {
+	payload := NewPayload(userInfo, role, duration)
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 	return jwtToken.SignedString([]byte(maker.secretKey))

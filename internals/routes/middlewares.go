@@ -95,6 +95,7 @@ type contextPayload struct {
 	ID         uuid.UUID `json:"id"`
 	Email      string    `json:"email"`
 	CompanyId  uuid.UUID `json:"company_id"`
+	Role       string    `json:"role"`
 	IsLoggedIn bool      `json:"is_logged_in"`
 	IssuedAt   time.Time `json:"issued_at"`
 	ExpiredAt  time.Time `json:"expired_at"`
