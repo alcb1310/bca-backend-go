@@ -8,8 +8,11 @@ import (
 	"net/mail"
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var role models.Role
 
 func (p *protectedRoutes) createUser() http.HandlerFunc {
 	type createUserJSON struct {
@@ -20,7 +23,6 @@ func (p *protectedRoutes) createUser() http.HandlerFunc {
 	}
 	var (
 		user    createUserJSON
-		role    models.Role
 		count   int64
 		company models.Company
 	)
@@ -93,15 +95,31 @@ func (p *protectedRoutes) createUser() http.HandlerFunc {
 }
 
 func (p *protectedRoutes) getAllUsers() http.HandlerFunc {
+	type userWithoutPassword struct {
+		ID        uuid.UUID `json:"id"`
+		Email     string    `json:"email"`
+		Name      string    `json:"name"`
+		Role      string    `json:"role"`
+		CompanyId uuid.UUID `json:"company_id"`
+	}
+
+	var user []userWithoutPassword
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := GetMyPaload(r)
 		if err != nil {
-			log.Println(":Error: ", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		fmt.Println(token)
-		w.Write([]byte("get all users"))
+		if token.Role == "admin" {
+			p.db.Find(&user, "company_id = ?", token.CompanyId)
+		} else {
+			p.db.Find(&user, "company_id = ? and id = ?", token.CompanyId, token.ID)
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(user)
 	}
 }
 
