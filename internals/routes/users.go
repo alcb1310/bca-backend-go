@@ -9,8 +9,17 @@ import (
 
 	"github.com/alcb1310/bca-backend-go/internals/models"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type userWithoutPassword struct {
+	ID        uuid.UUID `json:"id"`
+	Email     string    `json:"email"`
+	Name      string    `json:"name"`
+	Role      string    `json:"role"`
+	CompanyId uuid.UUID `json:"company_id"`
+}
 
 var role models.Role
 
@@ -95,13 +104,6 @@ func (p *protectedRoutes) createUser() http.HandlerFunc {
 }
 
 func (p *protectedRoutes) getAllUsers() http.HandlerFunc {
-	type userWithoutPassword struct {
-		ID        uuid.UUID `json:"id"`
-		Email     string    `json:"email"`
-		Name      string    `json:"name"`
-		Role      string    `json:"role"`
-		CompanyId uuid.UUID `json:"company_id"`
-	}
 
 	var user []userWithoutPassword
 
@@ -150,6 +152,8 @@ func (p *protectedRoutes) updateUser() http.HandlerFunc {
 }
 
 func (p *protectedRoutes) deleteUser() http.HandlerFunc {
+	var u userWithoutPassword
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := GetMyPaload(r)
 		if err != nil {
@@ -157,7 +161,29 @@ func (p *protectedRoutes) deleteUser() http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(token)
-		w.Write([]byte("delete user"))
+		if token.Role != "admin" {
+			http.Error(w, "You have to be an admin to delete users", http.StatusForbidden)
+			return
+		}
+		params := mux.Vars(r)
+		validId, err := uuid.Parse(params["userId"])
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if validId == token.ID {
+			result := p.db.Find(&u, "role = 'admin' and id != ?", params["userId"])
+			if result.RowsAffected == 0 {
+				http.Error(w, "Must always have at least one admin user", http.StatusBadRequest)
+				return
+			}
+		}
+		result := p.db.Delete(&models.User{}, "id = ? and company_id = ?", token.ID, token.CompanyId)
+		if result.Error != nil {
+			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
 	}
 }
