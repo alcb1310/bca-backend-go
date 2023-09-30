@@ -1,0 +1,12 @@
+[
+     {
+          "id":"7c76061d-b51a-4c63-8c06-94c6eea76ef4",
+          "email":"andres@andrescourt.com",
+          "name":"Andres Court",
+          "role":"user",
+          "company_id":"8d10e5e4-9255-4a78-a8fe-07950f7edd83"
+     },
+     {
+          "id":"4ffb7d17-d335-4a9a-9642-77d4486a3a03",
+          "email":"andres1@andrescourt.com",
+          "name":"Andres Court","role":"user","company_id":"8d10e5e4-9255-4a78-a8fe-07950f7edd83"}]

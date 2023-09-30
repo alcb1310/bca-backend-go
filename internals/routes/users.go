@@ -132,9 +132,27 @@ func (p *protectedRoutes) getOneUser() http.HandlerFunc {
 			log.Println(":Error: ", err)
 			return
 		}
+		params := mux.Vars(r)
+		parsedId, err := uuid.Parse(params["userId"])
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusForbidden)
+			return
+		}
 
-		fmt.Println(token)
-		w.Write([]byte("get one user"))
+		if token.Role != "admin" && parsedId != token.ID {
+			http.Error(w, "You have to be an admin to view that user", http.StatusForbidden)
+			return
+		}
+
+		var u userWithoutPassword
+		result := p.db.Find(&u, "company_id = ? and id = ?", token.CompanyId, parsedId)
+		if result.RowsAffected != 1 {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(u)
 	}
 }
 
@@ -179,7 +197,9 @@ func (p *protectedRoutes) deleteUser() http.HandlerFunc {
 				return
 			}
 		}
-		result := p.db.Delete(&models.User{}, "id = ? and company_id = ?", token.ID, token.CompanyId)
+
+		fmt.Println(token.ID, token.CompanyId)
+		result := p.db.Delete(&models.User{}, "id = ? and company_id = ?", validId, token.CompanyId)
 		if result.Error != nil {
 			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 			return
