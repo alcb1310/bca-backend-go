@@ -170,8 +170,6 @@ func (p *protectedRoutes) updateUser() http.HandlerFunc {
 }
 
 func (p *protectedRoutes) deleteUser() http.HandlerFunc {
-	var u userWithoutPassword
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, err := GetMyPaload(r)
 		if err != nil {
@@ -191,11 +189,8 @@ func (p *protectedRoutes) deleteUser() http.HandlerFunc {
 		}
 
 		if validId == token.ID {
-			result := p.db.Find(&u, "role = 'admin' and id != ?", params["userId"])
-			if result.RowsAffected == 0 {
-				http.Error(w, "Must always have at least one admin user", http.StatusBadRequest)
-				return
-			}
+			http.Error(w, "You can't delete yourself", http.StatusBadRequest)
+			return
 		}
 
 		fmt.Println(token.ID, token.CompanyId)
