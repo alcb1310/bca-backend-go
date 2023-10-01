@@ -193,7 +193,6 @@ func (p *protectedRoutes) deleteUser() http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(token.ID, token.CompanyId)
 		result := p.db.Delete(&models.User{}, "id = ? and company_id = ?", validId, token.CompanyId)
 		if result.Error != nil {
 			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
