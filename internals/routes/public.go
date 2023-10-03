@@ -76,11 +76,21 @@ func (s *Router) handleRegisterRoute() http.HandlerFunc {
 			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		var role models.Role
+		result = tx.Find(&role, "name = 'admin'")
+		if result.Error != nil || result.RowsAffected != 1 {
+			tx.Rollback()
+			http.Error(w, "No roles in the database", http.StatusInternalServerError)
+			return
+		}
+
 		u := models.User{
 			Name:     reg.UserName,
 			Email:    reg.Email,
 			Password: string(pass),
 			Company:  c,
+			Role:     role,
 		}
 		result = tx.Create(&u)
 		if result.Error != nil {
@@ -99,6 +109,7 @@ func (s *Router) handleLogin() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var c loginCredentials
 		var u models.User
+		var role models.Role
 
 		if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -109,6 +120,13 @@ func (s *Router) handleLogin() http.HandlerFunc {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 			return
 		}
+		result = s.db.Find(&role, "id = ?", u.RoleId)
+		if result.Error != nil || result.RowsAffected != 1 {
+			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
+		}
+
+		result = s.db.Find(&role, "id = ?", u.RoleId)
 		if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(c.Password)); err != nil {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 			return
@@ -120,7 +138,7 @@ func (s *Router) handleLogin() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		token, err := jwtMaker.CreateToken(u, 60*time.Minute)
+		token, err := jwtMaker.CreateToken(u, role.Name, 60*time.Minute)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return

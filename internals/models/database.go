@@ -40,6 +40,19 @@ func Connect() *gorm.DB {
 	d.AutoMigrate(&InvoiceDetails{})
 	d.AutoMigrate(&Historic{})
 	d.AutoMigrate(&LoggedInUser{})
+	d.AutoMigrate(&Role{})
+
+	var r Role
+	result := d.Find(&r, "name = 'admin'")
+	if result.Error != nil || result.RowsAffected != 1 {
+		r.Name = "admin"
+		d.Create(&r)
+
+		r = Role{
+			Name: "user",
+		}
+		d.Create(&r)
+	}
 
 	log.Println(":INFO: Database connected")
 	return d

@@ -25,6 +25,13 @@ func (s *Router) initAuthRoutes() {
 	p.Use(s.authVerify)
 
 	p.HandleFunc("/logout", p.handleLogout()).Methods(http.MethodGet)
+
+	// users endpoints
+	p.HandleFunc("/users", p.createUser()).Methods(http.MethodPost)
+	p.HandleFunc("/users", p.getAllUsers()).Methods(http.MethodGet)
+	p.HandleFunc("/users/{userId}", p.getOneUser()).Methods(http.MethodGet)
+	p.HandleFunc("/users/{userId}", p.updateUser()).Methods(http.MethodPut)
+	p.HandleFunc("/users/{userId}", p.deleteUser()).Methods(http.MethodDelete)
 }
 
 func (p *protectedRoutes) handleLogout() http.HandlerFunc {
